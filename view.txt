@@ -1,0 +1,41 @@
+CREATE VIEW v_dokumen AS 
+SELECT 
+	d.dok_id,
+	d.dok_code, 
+	d.dok_judul, 
+	d.dok_desc,
+	d.status, 
+	a.nama_lengkap, 
+	a.nip, 
+	GROUP_CONCAT(DISTINCT l.lampiran_nama SEPARATOR ',') as lampiran_dokumen 
+FROM tbl_dokumen d 
+LEFT JOIN 	tbl_admin a ON d.username = a.username JOIN tbl_lampiran_dokumen ld ON d.dok_code = ld.dok_code LEFT JOIN 
+	tbl_lampiran l ON ld.lampiran_id = l.lampiran_id 
+GROUP BY d.dok_id 
+
+
+DROP VIEW IF EXISTS v_agenda
+CREATE VIEW v_agenda AS
+SELECT
+	a.agenda_id,
+	a.agenda_code,
+	a.agenda_name, 
+	a.agenda_desc, 
+	a.agenda_mulai, 
+	a.agenda_akhir, 
+	a.agenda_lokasi, 
+	m.mitra_name, 
+	ad.nama_lengkap, 
+	ad.nip,
+	ad.hp as tlp, 
+	GROUP_CONCAT(DISTINCT l.lampiran_nama SEPARATOR ',') as lampiran_agenda 
+FROM tbl_agenda a
+LEFT JOIN 
+	tbl_mitra m ON a.mitra_code = m.mitra_code 
+LEFT JOIN
+	tbl_admin ad ON a.username = ad.username 
+LEFT JOIN 
+	tbl_lampiran_agenda la ON a.agenda_code = la.agenda_code
+LEFT JOIN 
+	tbl_lampiran l ON la.lampiran_id = l.lampiran_id 
+GROUP BY a.agenda_id 
